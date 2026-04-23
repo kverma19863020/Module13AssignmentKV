@@ -1,0 +1,61 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 40px;
+  width: 440px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+h1 { color: #e94560; font-size: 26px; margin-bottom: 6px; }
+.subtitle { color: #aaa; font-size: 13px; margin-bottom: 26px; }
+.form-group { margin-bottom: 18px; }
+label { display: block; color: #ccc; font-size: 13px; margin-bottom: 5px; font-weight: 500; }
+input, select {
+  width: 100%;
+  padding: 11px 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus { border-color: #e94560; }
+select option { background: #16213e; }
+button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #e94560, #c0392b);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: opacity 0.2s;
+}
+button:hover { opacity: 0.88; }
+.message {
+  margin-top: 16px;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: none;
+}
+.message.success { background: rgba(46,213,115,0.15); color: #2ed573; border: 1px solid #2ed573; display: block; }
+.message.error   { background: rgba(255,71,87,0.15);  color: #ff4757; border: 1px solid #ff4757; display: block; }
+.link { text-align: center; margin-top: 18px; color: #aaa; font-size: 13px; }
+.link a { color: #e94560; text-decoration: none; }
+.nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.nav a { color: #e94560; font-size: 13px; text-decoration: none; cursor: pointer; }

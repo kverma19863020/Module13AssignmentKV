@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Module13AssignmentKV</title>
+  <link rel="stylesheet" href="/static/css/style.css"/>
+</head>
+<body>
+<div class="card">
+  <div class="nav">
+    <h1 style="font-size:20px;margin:0">Calculator Dashboard</h1>
+    <a onclick="logout()">Logout</a>
+  </div>
+  <p class="subtitle">Module13AssignmentKV &mdash; JWT Protected</p>
+
+  <form id="calculationForm">
+    <div class="form-group">
+      <label for="type">Operation</label>
+      <select id="type" name="type">
+        <option value="add">Add</option>
+        <option value="subtract">Subtract</option>
+        <option value="multiply">Multiply</option>
+        <option value="divide">Divide</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="numbers">Numbers <small style="color:#888">(comma-separated, e.g. 10, 5, 2)</small></label>
+      <input type="text" id="numbers" name="numbers" placeholder="10, 5, 2" required/>
+    </div>
+    <button type="submit">Calculate</button>
+  </form>
+
+  <div id="calculationResult" class="message"></div>
+</div>
+
+<script src="/static/js/app.js"></script>
+<script>
+  if (!localStorage.getItem('access_token')) {
+    window.location.href = '/login';
+  }
+  function logout() {
+    localStorage.removeItem('access_token');
+    window.location.href = '/login';
+  }
+</script>
+</body>
+</html>
