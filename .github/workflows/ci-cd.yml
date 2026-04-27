@@ -57,16 +57,25 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/module13db
           SECRET_KEY: ci-test-secret-key
         run: |
-          uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
+          uvicorn main:app --host 0.0.0.0 --port 8000 --log-level debug > server.log 2>&1 &
           sleep 10
           curl -f http://localhost:8000/health || (cat server.log && exit 1)
 
-      - name: Test register endpoint directly
+      - name: Smoke test register endpoint
         run: |
-          curl -v -X POST http://localhost:8000/auth/register \
+          echo "Testing /auth/register endpoint..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST http://localhost:8000/auth/register \
             -H "Content-Type: application/json" \
-            -d '{"username":"testuser","email":"test@test.com","password":"SecurePass1"}' \
-            || cat server.log
+            -d '{"username":"smoketest","email":"smoke@test.com","password":"SecurePass123"}')
+          echo "$RESPONSE"
+          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
+          echo "Status code: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" != "201" ]; then
+            echo "FAILED: Expected 201 got $HTTP_STATUS"
+            cat server.log
+            exit 1
+          fi
+          echo "Smoke test passed"
 
       - uses: actions/setup-node@v4
         with:

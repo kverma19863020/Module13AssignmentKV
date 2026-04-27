@@ -4,10 +4,13 @@ from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
 import os
+import logging
 
 from app.database import get_db
 from app.models.user import User
 from app.schemas.user import UserRegister, UserLogin, TokenResponse
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -35,29 +38,41 @@ def create_access_token(data: dict) -> str:
 
 @router.post("/register", response_model=TokenResponse, status_code=201)
 def register(payload: UserRegister, db: Session = Depends(get_db)):
-    if db.query(User).filter(User.email == payload.email).first():
-        raise HTTPException(status_code=400, detail="Email already registered")
-    if db.query(User).filter(User.username == payload.username).first():
-        raise HTTPException(status_code=400, detail="Username already taken")
+    try:
+        if db.query(User).filter(User.email == payload.email).first():
+            raise HTTPException(status_code=400, detail="Email already registered")
+        if db.query(User).filter(User.username == payload.username).first():
+            raise HTTPException(status_code=400, detail="Username already taken")
 
-    new_user = User(
-        username=payload.username,
-        email=payload.email,
-        hashed_password=hash_password(payload.password)
-    )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+        new_user = User(
+            username=payload.username,
+            email=payload.email,
+            hashed_password=hash_password(payload.password)
+        )
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
 
-    token = create_access_token({"sub": new_user.username, "user_id": new_user.id})
-    return TokenResponse(access_token=token, message="Registration successful")
+        token = create_access_token({"sub": new_user.username, "user_id": new_user.id})
+        return TokenResponse(access_token=token, message="Registration successful")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Register error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/login", response_model=TokenResponse)
 def login(payload: UserLogin, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == payload.username).first()
-    if not user or not verify_password(payload.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid username or password")
+    try:
+        user = db.query(User).filter(User.username == payload.username).first()
+        if not user or not verify_password(payload.password, user.hashed_password):
+            raise HTTPException(status_code=401, detail="Invalid username or password")
 
-    token = create_access_token({"sub": user.username, "user_id": user.id})
-    return TokenResponse(access_token=token, message="Login successful")
+        token = create_access_token({"sub": user.username, "user_id": user.id})
+        return TokenResponse(access_token=token, message="Login successful")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Login error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
