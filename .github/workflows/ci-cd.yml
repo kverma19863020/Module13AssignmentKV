@@ -5,6 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
 
@@ -64,10 +65,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Playwright
+      - name: Install Playwright dependencies
         run: |
           cd tests
-          npm ci
+          npm install
           npx playwright install --with-deps chromium
 
       - name: Run E2E Tests
