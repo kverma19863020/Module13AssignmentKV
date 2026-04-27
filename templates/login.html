@@ -11,19 +11,19 @@
   <h1>Welcome Back</h1>
   <p class="subtitle">Module13AssignmentKV &mdash; JWT Login</p>
 
-  <form id="loginForm">
+  <form id="loginForm" novalidate>
     <div class="form-group">
       <label for="username">Username</label>
-      <input type="text" id="username" name="username" placeholder="johndoe" required/>
+      <input type="text" id="username" name="username" placeholder="johndoe"/>
     </div>
     <div class="form-group">
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="Your password" required/>
+      <input type="password" id="password" name="password" placeholder="Your password"/>
     </div>
     <button type="submit">Sign In</button>
   </form>
 
-  <div id="loginMessage" class="message"></div>
+  <div id="loginMessage"></div>
   <div class="link">Don't have an account? <a href="/register">Register</a></div>
 </div>
 <script src="/static/js/app.js"></script>
