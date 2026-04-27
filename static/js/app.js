@@ -5,12 +5,12 @@ if (registerForm) {
     event.preventDefault();
 
     const registerMessage = document.getElementById("registerMessage");
-    const email    = registerForm.email.value.trim();
+    const email = registerForm.email.value.trim();
     const username = registerForm.username.value.trim();
     const password = registerForm.password.value;
 
-    // Client-side validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     if (!emailRegex.test(email)) {
       registerMessage.textContent = "Please enter a valid email address.";
       registerMessage.className = "message error";
@@ -33,20 +33,25 @@ if (registerForm) {
       password: password,
     };
 
-    const response = await fetch("/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch("/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      registerMessage.textContent = data.message;
-      registerMessage.className = "message success";
-      setTimeout(() => window.location.href = "/login", 1500);
-    } else {
-      registerMessage.textContent = data.detail;
+      if (response.ok) {
+        registerMessage.textContent = data.message;
+        registerMessage.className = "message success";
+        setTimeout(() => window.location.href = "/login", 1500);
+      } else {
+        registerMessage.textContent = data.detail;
+        registerMessage.className = "message error";
+      }
+    } catch (err) {
+      registerMessage.textContent = "Network error. Is the server running?";
       registerMessage.className = "message error";
     }
   });
@@ -79,19 +84,24 @@ if (loginForm) {
       password: password,
     };
 
-    const response = await fetch("/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch("/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      localStorage.setItem("access_token", data.access_token);
-      window.location.href = "/dashboard";
-    } else {
-      loginMessage.textContent = data.detail;
+      if (response.ok) {
+        localStorage.setItem("access_token", data.access_token);
+        window.location.href = "/dashboard";
+      } else {
+        loginMessage.textContent = data.detail;
+        loginMessage.className = "message error";
+      }
+    } catch (err) {
+      loginMessage.textContent = "Network error. Is the server running?";
       loginMessage.className = "message error";
     }
   });
@@ -116,24 +126,29 @@ if (calculationForm) {
       .split(",")
       .map((number) => Number(number.trim()));
 
-    const response = await fetch("/calculations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        type: calculationForm.type.value,
-        inputs: inputs,
-      }),
-    });
+    try {
+      const response = await fetch("/calculations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          type: calculationForm.type.value,
+          inputs: inputs,
+        }),
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      calculationResult.textContent = `Result: ${data.result}`;
-      calculationResult.className = "message success";
-    } else {
-      calculationResult.textContent = data.detail;
+      const data = await response.json();
+      if (response.ok) {
+        calculationResult.textContent = `Result: ${data.result}`;
+        calculationResult.className = "message success";
+      } else {
+        calculationResult.textContent = data.detail;
+        calculationResult.className = "message error";
+      }
+    } catch (err) {
+      calculationResult.textContent = "Network error. Is the server running?";
       calculationResult.className = "message error";
     }
   });

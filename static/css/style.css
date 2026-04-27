@@ -53,8 +53,18 @@ button:hover { opacity: 0.88; }
   font-size: 13px;
   display: none;
 }
-.message.success { background: rgba(46,213,115,0.15); color: #2ed573; border: 1px solid #2ed573; display: block; }
-.message.error   { background: rgba(255,71,87,0.15);  color: #ff4757; border: 1px solid #ff4757; display: block; }
+.message.success {
+  background: rgba(46,213,115,0.15);
+  color: #2ed573;
+  border: 1px solid #2ed573;
+  display: block;
+}
+.message.error {
+  background: rgba(255,71,87,0.15);
+  color: #ff4757;
+  border: 1px solid #ff4757;
+  display: block;
+}
 .link { text-align: center; margin-top: 18px; color: #aaa; font-size: 13px; }
 .link a { color: #e94560; text-decoration: none; }
 .nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }

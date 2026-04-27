@@ -57,15 +57,22 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/module13db
           SECRET_KEY: ci-test-secret-key
         run: |
-          uvicorn main:app --host 0.0.0.0 --port 8000 &
-          sleep 8
-          curl -f http://localhost:8000/health || exit 1
+          uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
+          sleep 10
+          curl -f http://localhost:8000/health || (cat server.log && exit 1)
+
+      - name: Test register endpoint directly
+        run: |
+          curl -v -X POST http://localhost:8000/auth/register \
+            -H "Content-Type: application/json" \
+            -d '{"username":"testuser","email":"test@test.com","password":"SecurePass1"}' \
+            || cat server.log
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install Playwright dependencies
+      - name: Install Playwright
         run: |
           cd tests
           npm install
@@ -83,6 +90,10 @@ jobs:
           name: playwright-report
           path: tests/playwright-report/
           retention-days: 14
+
+      - name: Print server logs on failure
+        if: failure()
+        run: cat server.log || true
 
   docker-push:
     name: Build & Push to Docker Hub
