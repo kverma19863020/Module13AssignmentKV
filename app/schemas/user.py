@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, field_validator
 
+
 class UserRegister(BaseModel):
     username: str
     email: EmailStr
@@ -19,9 +20,11 @@ class UserRegister(BaseModel):
             raise ValueError("Username must be at least 3 characters")
         return v
 
+
 class UserLogin(BaseModel):
     username: str
     password: str
+
 
 class TokenResponse(BaseModel):
     access_token: str

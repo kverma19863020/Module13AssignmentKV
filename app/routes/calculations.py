@@ -9,11 +9,12 @@ from app.models.user import User
 from app.models.calculation import Calculation
 from app.schemas.calculation import CalculationRequest, CalculationResponse
 
-router  = APIRouter(prefix="/calculations", tags=["calculations"])
+router = APIRouter(prefix="/calculations", tags=["calculations"])
 security = HTTPBearer()
 
 SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-key-change-in-production-2024")
-ALGORITHM  = "HS256"
+ALGORITHM = "HS256"
+
 
 def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
